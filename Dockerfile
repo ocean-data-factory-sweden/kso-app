@@ -62,8 +62,8 @@ RUN echo $PYTHONPATH
 # Create a working directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-ADD https://api.github.com/repos/ocean-data-factory-sweden/koster_app/git/refs/heads/master version.json
-RUN git clone -b master https://github.com/ocean-data-factory-sweden/koster_app.git
+ADD https://api.github.com/repos/ocean-data-factory-sweden/koster_app/git/refs/heads/main version.json
+RUN git clone -b main https://github.com/ocean-data-factory-sweden/koster_app.git
 WORKDIR /usr/src/app/koster_app
 
 RUN ls -l
