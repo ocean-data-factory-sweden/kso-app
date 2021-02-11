@@ -1,1 +1,1 @@
-web:streamlit run app_frontend.py
+web: streamlit run app_frontend.py
