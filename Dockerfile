@@ -10,6 +10,8 @@ RUN pip install -r requirements.txt
 
 COPY . /streamlit
 
+RUN ls -l
+
 EXPOSE 8501
 
-CMD ["streamlit", "run", "app_frontend.py"]
+CMD ["sh", "-c", "streamlit", "run", "app_frontend.py"]
