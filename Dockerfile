@@ -14,4 +14,4 @@ RUN ls -l
 
 EXPOSE 8501
 
-CMD ["sh", "-c", "streamlit", "run", "app_frontend.py"]
+CMD ["streamlit", "run", "app_frontend.py", "--server.port",  "$PORT"]
