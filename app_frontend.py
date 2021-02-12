@@ -38,7 +38,7 @@ def load_data(endpoint=backend+'/data'):
     r = requests.get(
         endpoint, data={}, timeout=8000
     )
-    return pd.DataFrame(from_dict(r.json()["data"]))
+    return pd.DataFrame.from_dict(r.json()["data"])
 
 @st.cache
 def get_movie_frame(file_path: str, frame_number: int, endpoint: str=backend+'/read'):
