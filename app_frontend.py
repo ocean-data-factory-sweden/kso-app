@@ -36,21 +36,21 @@ def predict(media_path: str, conf_thres: float, iou_thres: float, endpoint: str=
 @st.cache
 def load_data(endpoint=backend+'/data'):
     r = requests.get(
-        endpoint, data={}, timeout=8000
+        endpoint, params={}, timeout=8000
     )
     return pd.DataFrame.from_dict(r.json()["data"])
 
 @st.cache
 def get_movie_frame(file_path: str, frame_number: int, endpoint: str=backend+'/read'):
     r = requests.get(
-        endpoint, data={"file_path": file_path, "frame_number": frame_number}, timeout=8000
+        endpoint, params={"file_path": file_path, "frame_number": frame_number}, timeout=8000
     )
     return np.array(json.loads(r.json()["frame_data"]))
 
 @st.cache
 def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
     r = requests.post(
-        endpoint, data={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
+        endpoint, params={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
     )
     print(r)
     return r.json()["output"]
@@ -58,7 +58,7 @@ def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
 @st.cache
 def save_video(file_name: str, file_data, endpoint: str=backend+'/save_vid'):
     r = requests.post(
-        endpoint, data={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
+        endpoint, params={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
     )
     print(r)
     return r.json()["output"]
