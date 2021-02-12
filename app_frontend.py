@@ -50,15 +50,17 @@ def get_movie_frame(file_path: str, frame_number: int, endpoint: str=backend+'/r
 @st.cache
 def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
     r = requests.post(
-        endpoint, data={"file_name": file_name, "file_data": file_data}, timeout=8000
+        endpoint, data={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
     )
+    print(r)
     return r.json()["output"]
 
 @st.cache
 def save_video(file_name: str, file_data, endpoint: str=backend+'/save_vid'):
     r = requests.post(
-        endpoint, data={"file_name": file_name, "file_data": file_data}, timeout=8000
+        endpoint, data={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
     )
+    print(r)
     return r.json()["output"]
 
 
