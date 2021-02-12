@@ -101,10 +101,10 @@ def run_the_app():
             return
 
     else:
-        if not os.path.exists("/data/api/training_footage"):
-            os.mkdir("/data/api/training_footage")  # create dest dir
+        if not os.path.exists("training_footage"):
+            os.mkdir("training_footage")  # create dest dir
         
-        m.out = "/data/api/training_footage"
+        m.out = "training_footage"
         # Load classified data
         df = load_data()
         # Load all movies to speed up frame retrieval
