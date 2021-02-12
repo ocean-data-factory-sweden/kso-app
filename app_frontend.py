@@ -158,7 +158,7 @@ def get_selected_frames(df, selected_movie_path):
 
 
 # This sidebar UI is a little search engine to find certain object types.
-def movie_selector_ui(movie_dict):
+def movie_selector_ui(movie_list):
 
     st.sidebar.markdown("# Movie")
 
