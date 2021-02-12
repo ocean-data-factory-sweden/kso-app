@@ -102,7 +102,7 @@ def run_the_app():
             except:
                 video = True
 
-                selected_frame = save_video(f"{name}", raw_buffer)
+                selected_frame = save_video(f"{name}", bytes_as_np_array)
                 #f"{os.path.dirname(m.out)}/{name}"
 
         else:
