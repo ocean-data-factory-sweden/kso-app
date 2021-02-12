@@ -47,6 +47,20 @@ def get_movie_frame(file_path: str, frame_number: int, endpoint: str=backend+'/r
     )
     return np.array(json.loads(r["frame_data"]))
 
+@st.cache
+def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
+    r = requests.post(
+        endpoint, data={"file_name": file_name, "file_data": file_data}, timeout=8000
+    )
+    return r["output"]
+
+@st.cache
+def save_video(file_name: str, file_data, endpoint: str=backend+'/save_vid'):
+    r = requests.post(
+        endpoint, data={"file_name": file_name, "file_data": file_data}, timeout=8000
+    )
+    return r["output"]
+
 
 def run_the_app():
     # Draw the UI element to select parameters for the YOLO object detector.
@@ -81,19 +95,13 @@ def run_the_app():
                 selected_frame = image  # cv2.resize(image, (416, 416))
 
                 # Save in a temp file as YOLO expects filepath
-                cv2.imwrite(f"{m.out}/{name}", selected_frame)
-                selected_frame = f"{m.out}/{name}"
+                selected_frame = save_image(f"{name}", image)
             # if video
             except:
                 video = True
 
-                with open(
-                    f"{os.path.dirname(m.out)}/{name}", "wb"
-                ) as out_file:  # open for [w]riting as [b]inary
-                    out_file.write(raw_buffer)
-
-                vid_out_path = f"{m.out}/{name}"
-                selected_frame = f"{os.path.dirname(m.out)}/{name}"
+                selected_frame = save_video(f"{name}", raw_buffer)
+                #f"{os.path.dirname(m.out)}/{name}"
 
         else:
             # Show the last image
@@ -101,10 +109,6 @@ def run_the_app():
             return
 
     else:
-        if not os.path.exists("training_footage"):
-            os.mkdir("training_footage")  # create dest dir
-        
-        m.out = "training_footage"
         # Load classified data
         df = load_data()
         # Load all movies to speed up frame retrieval
@@ -125,8 +129,7 @@ def run_the_app():
         selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split('.')[0]
-        cv2.imwrite(f"{m.out}/{mbase}_{selected_frame_number}.png", selected_frame)
-        selected_frame = f"{m.out}/{mbase}_{selected_frame_number}.png"
+        selected_frame = save_image(f"{mbase}_{selected_frame_number}.png", selected_frame)
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
     processed_image, vid = predict(media_path=selected_frame, conf_thres=confidence_threshold, iou_thres=overlap_threshold)
