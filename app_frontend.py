@@ -28,7 +28,7 @@ def main():
 @st.cache(allow_output_mutation=True)
 def predict(media_path: str, conf_thres: float, iou_thres: float, endpoint: str=backend+'/predict'):
     r = requests.post(
-        endpoint, data={"media_path": media_path, "conf_thres": conf_thres, 
+        endpoint, params={"media_path": media_path, "conf_thres": conf_thres, 
                           "iou_thres": iou_thres}, timeout=8000
     )
     return np.array(json.loads(r.json()["prediction"]))
@@ -50,17 +50,15 @@ def get_movie_frame(file_path: str, frame_number: int, endpoint: str=backend+'/r
 @st.cache
 def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
     r = requests.post(
-        endpoint, params={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
+        endpoint, params={"file_name": file_name, "file_data": json.dumps(file_data.tolist())}, timeout=8000
     )
-    print(r)
     return r.json()["output"]
 
 @st.cache
 def save_video(file_name: str, file_data, endpoint: str=backend+'/save_vid'):
     r = requests.post(
-        endpoint, params={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
+        endpoint, params={"file_name": file_name, "file_data": json.dumps(file_data.tolist())}, timeout=8000
     )
-    print(r)
     return r.json()["output"]
 
 
