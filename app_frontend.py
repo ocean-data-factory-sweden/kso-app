@@ -50,14 +50,14 @@ def get_movie_frame(file_path: str, frame_number: int, endpoint: str=backend+'/r
 @st.cache
 def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
     r = requests.post(
-        endpoint, params={"file_name": file_name, "file_data": json.dumps(file_data.tolist())}, timeout=8000
+        endpoint, params={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
     )
     return r.json()["output"]
 
 @st.cache
 def save_video(file_name: str, file_data, endpoint: str=backend+'/save_vid'):
     r = requests.post(
-        endpoint, params={"file_name": file_name, "file_data": json.dumps(file_data.tolist())}, timeout=8000
+        endpoint, params={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
     )
     return r.json()["output"]
 
@@ -93,7 +93,6 @@ def run_the_app():
                 image = cv2.imdecode(bytes_as_np_array, -1)
                 # Resize the image to the size YOLO model expects
                 selected_frame = image  # cv2.resize(image, (416, 416))
-                print(name, image.shape)
                 # Save in a temp file as YOLO expects filepath
                 selected_frame = save_image(f"{name}", image)
             # if video
