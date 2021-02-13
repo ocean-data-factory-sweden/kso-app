@@ -100,7 +100,7 @@ def run_the_app():
             # if video
             except:
                 video = True
-                selected_frame = np.float32(selected_frame)
+                selected_frame = np.float32(image)
                 selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                 selected_frame = save_video(f"{name}", selected_frame)
                 #f"{os.path.dirname(m.out)}/{name}"
