@@ -93,13 +93,16 @@ def run_the_app():
                 image = cv2.imdecode(bytes_as_np_array, -1)
                 # Resize the image to the size YOLO model expects
                 selected_frame = image  # cv2.resize(image, (416, 416))
+                selected_frame = np.float32(selected_frame)
+                selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                 # Save in a temp file as YOLO expects filepath
-                selected_frame = save_image(f"{name}", image)
+                selected_frame = save_image(f"{name}", selected_frame)
             # if video
             except:
                 video = True
-
-                selected_frame = save_video(f"{name}", bytes_as_np_array)
+                selected_frame = np.float32(selected_frame)
+                selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
+                selected_frame = save_video(f"{name}", selected_frame)
                 #f"{os.path.dirname(m.out)}/{name}"
 
         else:
@@ -133,9 +136,6 @@ def run_the_app():
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
     processed_image, vid = predict(media_path=selected_frame, conf_thres=confidence_threshold, iou_thres=overlap_threshold)
-    processed_image = np.float32(processed_image)
-    processed_image = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
-    processed_image = np.clip(processed_image, a_min = 0.0, a_max = 1.0) 
     if vid:
         st.header("Model Output")
         st.markdown(
