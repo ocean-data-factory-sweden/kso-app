@@ -88,22 +88,22 @@ def run_the_app():
             # text_io = io.TextIOWrapper(img_file_buffer)
             raw_buffer = img_file_buffer.read()
             bytes_as_np_array = np.fromstring(raw_buffer, np.uint8)
-            # if image
-            #try:
-            image = cv2.imdecode(bytes_as_np_array, -1)
-            # Resize the image to the size YOLO model expects
-            selected_frame = image  # cv2.resize(image, (416, 416))
-            selected_frame = np.float32(selected_frame)
-            selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
-            # Save in a temp file as YOLO expects filepath
-            selected_frame = save_image(f"{name}", selected_frame)
-            # if video
-            # except:
-            #     video = True
-            #     selected_frame = np.float32(image)
-            #     selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
-            #     selected_frame = save_video(f"{name}", selected_frame)
-                #f"{os.path.dirname(m.out)}/{name}"
+            
+            #if image:
+            try:
+                image = cv2.imdecode(bytes_as_np_array, -1)
+                # Resize the image to the size YOLO model expects
+                #selected_frame = image  # cv2.resize(image, (416, 416))
+                image = np.float32(image)
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                # Save in a temp file as YOLO expects filepath
+                selected_frame = save_image(f"{name}", image)
+            #if video
+            except:
+                video = True
+                image = np.float32(image)
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                selected_frame = save_video(f"{name}", image)
 
         else:
             # Show the last image
