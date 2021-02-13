@@ -50,14 +50,14 @@ def get_movie_frame(file_path: str, frame_number: int, endpoint: str=backend+'/r
 @st.cache
 def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
     r = requests.post(
-        endpoint, params={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
+        endpoint, params={"file_name": file_name}, json={"file_data": json.dumps(file_data.tolist())}, timeout=8000
     )
     return r.json()["output"]
 
 @st.cache
 def save_video(file_name: str, file_data, endpoint: str=backend+'/save_vid'):
     r = requests.post(
-        endpoint, params={"file_name": file_name, "file_data": file_data.tobytes()}, timeout=8000
+        endpoint, params={"file_name": file_name}, json={"file_data": json.dumps(file_data.tolist())}, timeout=8000
     )
     return r.json()["output"]
 
@@ -138,15 +138,15 @@ def run_the_app():
             "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
-        st.video(vid_out_path)
-        os.remove(selected_frame)
+        st.video(processed_image)
+        #os.remove(selected_frame)
     else:
         # Draw the header and image.
         st.subheader("Model Output")
         st.markdown("**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold))
-        st.image(selected_frame, use_column_width=True)
-        os.remove(selected_frame)
+        st.image(processed_image, use_column_width=True)
+        #os.remove(selected_frame)
 
 
 @st.cache(hash_funcs={np.ufunc: str})
