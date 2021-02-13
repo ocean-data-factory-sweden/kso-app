@@ -88,6 +88,7 @@ def run_the_app():
             # text_io = io.TextIOWrapper(img_file_buffer)
             raw_buffer = img_file_buffer.read()
             bytes_as_np_array = np.fromstring(raw_buffer, np.uint8)
+            print(bytes_as_np_array.shape)
             
             #if image:
             try:
