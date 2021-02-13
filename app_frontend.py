@@ -133,6 +133,8 @@ def run_the_app():
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
     processed_image, vid = predict(media_path=selected_frame, conf_thres=confidence_threshold, iou_thres=overlap_threshold)
+    processed_image = np.float32(processed_image)
+    processed_image = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
     if vid:
         st.header("Model Output")
         st.markdown(
