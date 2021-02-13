@@ -95,16 +95,15 @@ def run_the_app():
                     image = cv2.imdecode(bytes_as_np_array, -1)
                     # Resize the image to the size YOLO model expects
                     #selected_frame = image  # cv2.resize(image, (416, 416))
-                    image = np.float32(image)
-                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                    selected_frame = image
+                    selected_frame = np.float32(selected_frame)
+                    selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                     # Save in a temp file as YOLO expects filepath
-                    selected_frame = save_image(f"{name}", image)
+                    selected_frame = save_image(f"{name}", selected_frame)
                 #if video
                 except:
                     video = True
-                    image = np.float32(image)
-                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                    selected_frame = save_video(f"{name}", image)
+                    selected_frame = save_video(f"{name}", raw_buffer)
 
         else:
             # Show the last image
