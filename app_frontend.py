@@ -96,7 +96,7 @@ def run_the_app():
                 #selected_frame = image  # cv2.resize(image, (416, 416))
                 selected_frame = image
                 selected_frame = np.float32(selected_frame)
-                selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
+                #selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                 # Save in a temp file as YOLO expects filepath
                 try:
                     selected_frame = save_image(f"{name}", selected_frame)
