@@ -98,14 +98,18 @@ def run_the_app():
                 selected_frame = np.float32(selected_frame)
                 selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                 # Save in a temp file as YOLO expects filepath
-                selected_frame = save_image(f"{name}", selected_frame)
-                selected_frame = f"/data/api/{name}"
+                try:
+                    selected_frame = save_image(f"{name}", selected_frame)
+                except:
+                    selected_frame = f"/data/api/{name}"
 
             #if video
             except:
                 video = True
-                selected_frame = save_video(f"{name}", raw_buffer)
-                selected_frame = f"/data/api/{name}"
+                try:
+                    selected_frame = save_video(f"{name}", raw_buffer)
+                except:
+                    selected_frame = f"/data/api/{name}"
 
         else:
             # Show the last image
