@@ -89,24 +89,23 @@ def run_the_app():
             raw_buffer = img_file_buffer.read()
             bytes_as_np_array = np.fromstring(raw_buffer, np.uint8)
             
-            if len(bytes_as_np_array) > 0:
-                #if image:
-                try:
-                    image = cv2.imdecode(bytes_as_np_array, -1)
-                    # Resize the image to the size YOLO model expects
-                    #selected_frame = image  # cv2.resize(image, (416, 416))
-                    selected_frame = image
-                    selected_frame = np.float32(selected_frame)
-                    selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
-                    # Save in a temp file as YOLO expects filepath
-                    selected_frame = save_image(f"{name}", selected_frame)
-                    selected_frame = f"/data/api/{name}"
+            #if image:
+            try:
+                image = cv2.imdecode(bytes_as_np_array, -1)
+                # Resize the image to the size YOLO model expects
+                #selected_frame = image  # cv2.resize(image, (416, 416))
+                selected_frame = image
+                selected_frame = np.float32(selected_frame)
+                selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
+                # Save in a temp file as YOLO expects filepath
+                selected_frame = save_image(f"{name}", selected_frame)
+                selected_frame = f"/data/api/{name}"
 
-                #if video
-                except:
-                    video = True
-                    selected_frame = save_video(f"{name}", raw_buffer)
-                    selected_frame = f"/data/api/{name}"
+            #if video
+            except:
+                video = True
+                selected_frame = save_video(f"{name}", raw_buffer)
+                selected_frame = f"/data/api/{name}"
 
         else:
             # Show the last image
