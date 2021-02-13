@@ -93,7 +93,7 @@ def run_the_app():
                 image = cv2.imdecode(bytes_as_np_array, -1)
                 # Resize the image to the size YOLO model expects
                 selected_frame = image  # cv2.resize(image, (416, 416))
-
+                print(name, image.shape)
                 # Save in a temp file as YOLO expects filepath
                 selected_frame = save_image(f"{name}", image)
             # if video
