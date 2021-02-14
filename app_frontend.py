@@ -106,6 +106,7 @@ def run_the_app():
 
             #if video
             except:
+                print("yes this is a video!")
                 video = True
                 try:
                     selected_frame = save_video(f"{name}", raw_buffer)
