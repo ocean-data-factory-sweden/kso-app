@@ -57,7 +57,7 @@ def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
 @st.cache
 def save_video(file_name: str, file_data, endpoint: str=backend+'/save_vid'):
     r = requests.post(
-        endpoint, params={"file_name": file_name}, json={"file_data": file_data}, timeout=8000
+        endpoint, params={"file_name": file_name}, data={"file_data": file_data}, timeout=8000
     )
     return r.json()["output"]
 
