@@ -113,7 +113,7 @@ def run_the_app():
                     out_file.write(raw_buffer)
 
                 vid_cap = cv2.VideoCapture(f'temp_{name}')
-                fps = vid_cap.get(cv2.CAP_PROP_FPS)
+                fps = int(vid_cap.get(cv2.CAP_PROP_FPS))
                 w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
                 h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
