@@ -106,10 +106,10 @@ def run_the_app():
 
             else:
                 video = True
-                #try:
-                selected_frame = save_video(f"{name}", bytes_as_np_array)
-                #except:
-                #    selected_frame = f"/data/api/{name}"
+                try:
+                    selected_frame = save_video(f"{name}", bytes_as_np_array)
+                except:
+                    selected_frame = f"/data/api/{name}"
 
         else:
             # Show the last image
