@@ -55,9 +55,9 @@ def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
     return r.json()["output"]
 
 @st.cache
-def save_video(file_name: str, file_data, endpoint: str=backend+'/save_vid'):
+def save_video(file_name: str, file_data, fps: int, w: int, h: int, endpoint: str=backend+'/save_vid'):
     r = requests.post(
-        endpoint, params={"file_name": file_name}, json={"file_data": json.dumps(file_data.tolist())}, timeout=8000
+        endpoint, params={"file_name": file_name, "fps": fps, "w": w, "h": h}, json={"file_data": json.dumps(file_data.tolist())}, timeout=8000
     )
     return r.json()["output"]
 
@@ -112,7 +112,12 @@ def run_the_app():
                 ) as out_file:  # open for [w]riting as [b]inary
                     out_file.write(raw_buffer)
 
-                selected_frame = save_video(f"{name}", np.frombuffer(open(f"temp_{name}", 'rb').read(), np.uint8))
+                vid_cap = cv2.VideoCapture(f'temp_{file_name}')
+                fps = vid_cap.get(cv2.CAP_PROP_FPS)
+                w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+                selected_frame = save_video(f"{name}", np.frombuffer(open(f"temp_{name}", 'rb').read(), np.uint8), fps, w, h)
                 #except:
                 #    selected_frame = f"/data/api/{name}"
 
