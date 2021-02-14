@@ -112,7 +112,7 @@ def run_the_app():
                 ) as out_file:  # open for [w]riting as [b]inary
                     out_file.write(raw_buffer)
 
-                selected_frame = save_video(f"{name}", np.frombuffer(open(f"temp_{name}").read(), np.uint8))
+                selected_frame = save_video(f"{name}", np.frombuffer(open(f"temp_{name}", 'rb').read(), np.uint8))
                 #except:
                 #    selected_frame = f"/data/api/{name}"
 
