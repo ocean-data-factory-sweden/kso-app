@@ -107,8 +107,8 @@ def run_the_app():
             else:
                 video = True
                 #try:
-                selected_frame = save_video(f"{name}", raw_buffer)
-                #except:
+                selected_frame = save_video(f"{name}", bytes_as_np_array)
+                #except:ß
                 #    selected_frame = f"/data/api/{name}"
 
         else:
