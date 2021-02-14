@@ -4,3 +4,4 @@ requests-toolbelt==0.9.1
 pandas
 numpy
 opencv-python-headless
+pims
