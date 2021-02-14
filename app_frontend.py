@@ -90,7 +90,7 @@ def run_the_app():
             bytes_as_np_array = np.fromstring(raw_buffer, np.uint8)
             
             #if image:
-            if os.path.splitext(name)[1] in [".png", ".jpg", ".jpeg"]:
+            try:
                 image = cv2.imdecode(bytes_as_np_array, -1)
                 # Resize the image to the size YOLO model expects
                 #selected_frame = image  # cv2.resize(image, (416, 416))
@@ -98,13 +98,14 @@ def run_the_app():
                 selected_frame = np.float32(selected_frame)
                 #selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                 # Save in a temp file as YOLO expects filepath
+                assert (os.path.splitext(name)[1] in [".png", ".jpg", ".jpeg"])
                 try:
                     selected_frame = save_image(f"{name}", selected_frame)
                 except:
                     selected_frame = f"/data/api/{name}"
 
             #if video
-            else:
+            except:
                 video = True
                 try:
                     selected_frame = save_video(f"{name}", raw_buffer)
