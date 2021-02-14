@@ -57,7 +57,7 @@ def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
 @st.cache
 def save_video(file_name: str, file_data, endpoint: str=backend+'/save_vid'):
     r = requests.post(
-        endpoint, params={"file_name": file_name}, json={"file_data": json.dumps(file_data)}, timeout=8000
+        endpoint, params={"file_name": file_name}, json={"file_data": json.dumps(file_data.encode('utf-8'))}, timeout=8000
     )
     return r.json()["output"]
 
@@ -108,7 +108,7 @@ def run_the_app():
                 video = True
                 #try:
                 selected_frame = save_video(f"{name}", raw_buffer)
-                #except:ß
+                #except:
                 #    selected_frame = f"/data/api/{name}"
 
         else:
