@@ -90,7 +90,7 @@ def run_the_app():
             bytes_as_np_array = np.fromstring(raw_buffer, np.uint8)
             
             #if image:
-            try:
+            if os.path.splitext(name)[1] in [".png", ".jpg", ".jpeg"]:
                 image = cv2.imdecode(bytes_as_np_array, -1)
                 # Resize the image to the size YOLO model expects
                 #selected_frame = image  # cv2.resize(image, (416, 416))
@@ -104,7 +104,7 @@ def run_the_app():
                     selected_frame = f"/data/api/{name}"
 
             #if video
-            except:
+            else:
                 video = True
                 try:
                     selected_frame = save_video(f"{name}", raw_buffer)
