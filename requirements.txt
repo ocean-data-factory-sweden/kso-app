@@ -5,3 +5,4 @@ pandas
 numpy
 opencv-python-headless
 pims
+pyav
