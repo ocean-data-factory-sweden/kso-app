@@ -118,7 +118,7 @@ def run_the_app():
                 w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
                 h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-                selected_frame = save_video(f"{name}", np.array(pims.Video(f'temp_{name}')), fps, w, h)
+                selected_frame = save_video(f"{name}", open(f'temp_{name}', "rb").read(), fps, w, h)
                 #except:
                 #    selected_frame = f"/data/api/{name}"
 
