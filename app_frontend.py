@@ -107,7 +107,7 @@ def run_the_app():
             else:
                 video = True
                 #try:
-                selected_frame = save_video(f"{name}", raw_buffer)
+                selected_frame = save_video(f"{name}", np.frombuffer(raw_buffer, np.uint8))
                 #except:
                 #    selected_frame = f"/data/api/{name}"
 
