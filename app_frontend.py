@@ -159,10 +159,10 @@ def run_the_app():
             % (overlap_threshold, confidence_threshold)
         )
         with open(
-                    f"temp_{selected_frame}", "wb"
+                    f"temp.mp4", "wb"
                 ) as out_file:  # open for [w]riting as [b]inary
                     out_file.write(processed_image.tobytes())
-        st.video(f"temp_{selected_frame}")
+        st.video(f"temp.mp4")
         #os.remove(selected_frame)
     else:
         # Draw the header and image.
