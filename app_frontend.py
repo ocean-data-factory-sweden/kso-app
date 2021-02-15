@@ -165,7 +165,11 @@ def run_the_app():
         st.subheader("Model Output")
         st.markdown("**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold))
-        st.image(processed_image.tobytes(), use_column_width=True)
+        with open(
+                    f"temp_{selected_frame}", "wb"
+                ) as out_file:  # open for [w]riting as [b]inary
+                    out_file.write(processed_image.tobytes())
+        st.image(f"temp_{selected_frame}", use_column_width=True)
         #os.remove(selected_frame)
 
 
