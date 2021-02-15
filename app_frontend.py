@@ -100,7 +100,6 @@ def run_the_app():
                     selected_frame = np.float32(selected_frame)
                     #selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                     # Save in a temp file as YOLO expects filepath
-
                     selected_frame = save_image(f"{name}", selected_frame)
                 except:
                     selected_frame = f"/data/api/{name}"
@@ -118,7 +117,7 @@ def run_the_app():
                 w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
                 h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-                selected_frame = save_video(f"{name}", np.array(pims.Video(f'temp_{name}')).tobytes(), fps, w, h)
+                selected_frame = save_video(f"{name}", raw_buffer, fps, w, h)
                 #except:
                 #    selected_frame = f"/data/api/{name}"
 
