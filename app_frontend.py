@@ -158,6 +158,7 @@ def run_the_app():
             "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
+        print(len(bytes(list(processed_image))))
         st.video(bytes(list(processed_image)))
         #os.remove(selected_frame)
     else:
