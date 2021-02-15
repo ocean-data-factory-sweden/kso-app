@@ -158,8 +158,12 @@ def run_the_app():
             "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
-        print(bytes(list(processed_image))[:50])
-        st.video(bytes(list(processed_image)))
+        with open(
+                    "temp.mp4", "wb"
+                    ) as out_file:  # open for [w]riting as [b]inary
+                        out_file.write(bytes(list(processed_image)))
+
+        st.video("temp.mp4")
         #os.remove(selected_frame)
     else:
         # Draw the header and image.
