@@ -32,7 +32,7 @@ def predict(media_path: str, conf_thres: float, iou_thres: float, endpoint: str=
         endpoint, params={"media_path": media_path, "conf_thres": conf_thres, 
                           "iou_thres": iou_thres}, timeout=8000
     )
-    return np.array(json.loads(r.json()["prediction"])), r.json()["vid"]
+    return np.array(r.json()["prediction"]), r.json()["vid"]
 
 @st.cache
 def load_data(endpoint=backend+'/data'):
