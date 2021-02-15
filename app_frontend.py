@@ -160,7 +160,7 @@ def run_the_app():
         )
         print("Old", len(raw_buffer))
         print("New", len(bytes(list(processed_image))))
-        st.video(raw_buffer)
+        st.video(bytes(list(processed_image)))
         #os.remove(selected_frame)
     else:
         # Draw the header and image.
