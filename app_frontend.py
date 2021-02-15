@@ -158,18 +158,19 @@ def run_the_app():
             "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
-        st.video(processed_image)
+        with open(
+                    f"temp_{selected_frame}", "wb"
+                ) as out_file:  # open for [w]riting as [b]inary
+                    out_file.write(processed_image.tobytes())
+        st.video(f"temp_{selected_frame}")
         #os.remove(selected_frame)
     else:
         # Draw the header and image.
         st.subheader("Model Output")
         st.markdown("**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold))
-        with open(
-                    f"temp_{selected_frame}", "wb"
-                ) as out_file:  # open for [w]riting as [b]inary
-                    out_file.write(processed_image.tobytes())
-        st.image(f"temp_{selected_frame}", use_column_width=True)
+        
+        st.image(processed_image, use_column_width=True)
         #os.remove(selected_frame)
 
 
