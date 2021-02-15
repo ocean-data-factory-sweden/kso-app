@@ -106,22 +106,20 @@ def run_the_app():
 
             else:
                 video = True
-                #try:
-                with open(
-                    f"temp_{name}", "wb"
-                ) as out_file:  # open for [w]riting as [b]inary
-                    out_file.write(raw_buffer)
+                try:
+                    with open(
+                        f"temp_{name}", "wb"
+                    ) as out_file:  # open for [w]riting as [b]inary
+                        out_file.write(raw_buffer)
 
-                st.video(raw_buffer)
+                    vid_cap = cv2.VideoCapture(f'temp_{name}')
+                    fps = int(vid_cap.get(cv2.CAP_PROP_FPS))
+                    w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                    h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-                vid_cap = cv2.VideoCapture(f'temp_{name}')
-                fps = int(vid_cap.get(cv2.CAP_PROP_FPS))
-                w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-                selected_frame = save_video(f"{name}", raw_buffer, fps, w, h)
-                #except:
-                #    selected_frame = f"/data/api/{name}"
+                    selected_frame = save_video(f"{name}", raw_buffer, fps, w, h)
+                except:
+                    selected_frame = f"/data/api/{name}"
 
         else:
             # Show the last image
