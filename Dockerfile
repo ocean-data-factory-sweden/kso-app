@@ -2,6 +2,8 @@ FROM python:3.7-slim
 
 RUN apt-get update 
 RUN apt-get install ffmpeg libsm6 libxext6  -y
+RUN apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+RUN apt-get -y install libxvidcore-dev libx264-dev
 
 RUN mkdir /streamlit
 
