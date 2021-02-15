@@ -112,6 +112,8 @@ def run_the_app():
                 ) as out_file:  # open for [w]riting as [b]inary
                     out_file.write(raw_buffer)
 
+                st.video(raw_buffer)
+
                 vid_cap = cv2.VideoCapture(f'temp_{name}')
                 fps = int(vid_cap.get(cv2.CAP_PROP_FPS))
                 w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
