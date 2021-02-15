@@ -116,7 +116,7 @@ def run_the_app():
                     fps = int(vid_cap.get(cv2.CAP_PROP_FPS))
                     w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
                     h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
+                    assert (fps > 0)
                     selected_frame = save_video(f"{name}", raw_buffer, fps, w, h)
                 except:
                     selected_frame = f"/data/api/{name}"
