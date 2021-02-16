@@ -206,7 +206,7 @@ def run_the_app():
         )
 
         st.image(
-            cv2.cvtColor(np.float32(processed_image), cv2.COLOR_BGR2RGB), use_column_width=True
+            cv2.cvtColor(np.float32(processed_image) / 255, cv2.COLOR_BGR2RGB), use_column_width=True
         )
         # os.remove(selected_frame)
 
