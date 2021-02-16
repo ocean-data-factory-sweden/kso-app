@@ -46,13 +46,11 @@ def predict(
     return np.array(r.json()["prediction"]), r.json()["vid"]
 
 
-@st.cache
 def load_data(endpoint=backend + "/data"):
     r = requests.get(endpoint, params={}, timeout=8000)
     return pd.DataFrame.from_dict(r.json()["data"])
 
 
-@st.cache(allow_output_mutation=True)
 def get_movie_frame(
     file_path: str, frame_number: int, endpoint: str = backend + "/read"
 ):
@@ -64,7 +62,6 @@ def get_movie_frame(
     return np.array(json.loads(r.json()["frame_data"]))
 
 
-@st.cache(allow_output_mutation=True)
 def save_image(file_name: str, file_data, endpoint: str = backend + "/save"):
     r = requests.post(
         endpoint,
@@ -75,7 +72,6 @@ def save_image(file_name: str, file_data, endpoint: str = backend + "/save"):
     return r.json()["output"]
 
 
-@st.cache(allow_output_mutation=True)
 def save_video(
     file_name: str,
     file_data,
