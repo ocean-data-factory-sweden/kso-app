@@ -11,6 +11,7 @@ st.set_option("deprecation.showfileUploaderEncoding", False)
 # interact with FastAPI endpoint
 backend = "http://60b204a0823e.ngrok.io"
 
+
 def main():
     # Set up appearance of sidebar
     st.sidebar.title("Koster Lab - Deep Sea Coral Detection")
@@ -27,38 +28,67 @@ def main():
 
 
 @st.cache(allow_output_mutation=True)
-def predict(media_path: str, conf_thres: float, iou_thres: float, endpoint: str=backend+'/predict'):
+def predict(
+    media_path: str,
+    conf_thres: float,
+    iou_thres: float,
+    endpoint: str = backend + "/predict",
+):
     r = requests.post(
-        endpoint, params={"media_path": media_path, "conf_thres": conf_thres, 
-                          "iou_thres": iou_thres}, timeout=8000
+        endpoint,
+        params={
+            "media_path": media_path,
+            "conf_thres": conf_thres,
+            "iou_thres": iou_thres,
+        },
+        timeout=8000,
     )
     return np.array(r.json()["prediction"]), r.json()["vid"]
 
-@st.cache
-def load_data(endpoint=backend+'/data'):
-    r = requests.get(
-        endpoint, params={}, timeout=8000
-    )
-    return pd.DataFrame.from_dict(r.json()["data"])
 
 @st.cache
-def get_movie_frame(file_path: str, frame_number: int, endpoint: str=backend+'/read'):
+def load_data(endpoint=backend + "/data"):
+    r = requests.get(endpoint, params={}, timeout=8000)
+    return pd.DataFrame.from_dict(r.json()["data"])
+
+
+@st.cache(allow_output_mutation=True)
+def get_movie_frame(
+    file_path: str, frame_number: int, endpoint: str = backend + "/read"
+):
     r = requests.get(
-        endpoint, params={"file_path": file_path, "frame_number": frame_number}, timeout=8000
+        endpoint,
+        params={"file_path": file_path, "frame_number": frame_number},
+        timeout=8000,
     )
     return np.array(json.loads(r.json()["frame_data"]))
 
-@st.cache
-def save_image(file_name: str, file_data, endpoint: str=backend+'/save'):
+
+@st.cache(allow_output_mutation=True)
+def save_image(file_name: str, file_data, endpoint: str = backend + "/save"):
     r = requests.post(
-        endpoint, params={"file_name": file_name}, json={"file_data": json.dumps(file_data.tolist())}, timeout=8000
+        endpoint,
+        params={"file_name": file_name},
+        json={"file_data": json.dumps(file_data.tolist())},
+        timeout=8000,
     )
     return r.json()["output"]
 
-@st.cache
-def save_video(file_name: str, file_data, fps: int, w: int, h: int, endpoint: str=backend+'/save_vid'):
+
+@st.cache(allow_output_mutation=True)
+def save_video(
+    file_name: str,
+    file_data,
+    fps: int,
+    w: int,
+    h: int,
+    endpoint: str = backend + "/save_vid",
+):
     r = requests.post(
-        endpoint, params={"file_name": file_name, "fps": fps, "w": w, "h": h}, files={"file_data": file_data}, timeout=8000
+        endpoint,
+        params={"file_name": file_name, "fps": fps, "w": w, "h": h},
+        files={"file_data": file_data},
+        timeout=8000,
     )
     return r.json()["output"]
 
@@ -90,15 +120,15 @@ def run_the_app():
             # text_io = io.TextIOWrapper(img_file_buffer)
             raw_buffer = img_file_buffer.read()
             bytes_as_np_array = np.fromstring(raw_buffer, np.uint8)
-            
+
             if im:
                 try:
                     image = cv2.imdecode(bytes_as_np_array, -1)
                     # Resize the image to the size YOLO model expects
-                    #selected_frame = image  # cv2.resize(image, (416, 416))
+                    # selected_frame = image  # cv2.resize(image, (416, 416))
                     selected_frame = image
                     selected_frame = np.float32(selected_frame)
-                    #selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
+                    # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                     # Save in a temp file as YOLO expects filepath
                     selected_frame = save_image(f"{name}", selected_frame)
                 except:
@@ -112,12 +142,13 @@ def run_the_app():
                     ) as out_file:  # open for [w]riting as [b]inary
                         out_file.write(raw_buffer)
 
-                    vid_cap = cv2.VideoCapture(f'temp_{name}')
+                    vid_cap = cv2.VideoCapture(f"temp_{name}")
                     fps = int(vid_cap.get(cv2.CAP_PROP_FPS))
                     w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
                     h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                    assert (fps > 0)
+                    assert fps > 0
                     selected_frame = save_video(f"{name}", raw_buffer, fps, w, h)
+                    os.remove(f"temp_{name}")
                 except:
                     selected_frame = f"/data/api/{name}"
 
@@ -144,32 +175,40 @@ def run_the_app():
         # Resize the image to the size YOLO model expects
         # selected_frame = cv2.resize(selected_frame, (416, 416))
         # Convert color space to match YOLO input
-        #selected_frame = np.float32(selected_frame)
-        #selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
+        # selected_frame = np.float32(selected_frame)
+        # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
         # Save in a temp file as YOLO expects filepath
-        mbase = os.path.basename(selected_movie_path).split('.')[0]
-        selected_frame = save_image(f"{mbase}_{selected_frame_number}.png", selected_frame)
+        mbase = os.path.basename(selected_movie_path).split(".")[0]
+        selected_frame = save_image(
+            f"{mbase}_{selected_frame_number}.png", selected_frame
+        )
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
-    processed_image, vid = predict(media_path=selected_frame, conf_thres=confidence_threshold, iou_thres=overlap_threshold)
+    processed_image, vid = predict(
+        media_path=selected_frame,
+        conf_thres=confidence_threshold,
+        iou_thres=overlap_threshold,
+    )
     if vid:
         st.header("Model Output")
         st.markdown(
             "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
-        print("Old", len(raw_buffer))
-        print("New", len(bytes(list(processed_image))))
         st.video(bytes(list(processed_image)))
-        #os.remove(selected_frame)
+        # os.remove(selected_frame)
     else:
         # Draw the header and image.
-        st.subheader("Model Output")
-        st.markdown("**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
-            % (overlap_threshold, confidence_threshold))
-        
-        st.image(processed_image, use_column_width=True)
-        #os.remove(selected_frame)
+        st.header("Model Output")
+        st.markdown(
+            "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
+            % (overlap_threshold, confidence_threshold)
+        )
+
+        st.image(
+            cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB), use_column_width=True
+        )
+        # os.remove(selected_frame)
 
 
 @st.cache(hash_funcs={np.ufunc: str})
@@ -195,7 +234,6 @@ def movie_selector_ui(movie_list):
 
 # This sidebar UI is a little search engine to find certain object types.
 def frame_selector_ui(movie_frames):
-
     st.sidebar.markdown("# Frame")
 
     # Choose a frame out of the selected frames.
@@ -214,6 +252,7 @@ def object_detector_ui():
     )
     overlap_threshold = st.sidebar.slider("Overlap threshold", 0.0, 1.0, 0.3, 0.01)
     return confidence_threshold, overlap_threshold
+
 
 if __name__ == "__main__":
     main()
