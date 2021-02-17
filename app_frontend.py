@@ -5,6 +5,8 @@ import numpy as np
 import os, requests, cv2, json
 import pims
 
+# Set app config
+st.beta_set_page_config(page_title='Koster Object Detector App')
 # Disable automatic encoding warning for uploaded files
 st.set_option("deprecation.showfileUploaderEncoding", False)
 
@@ -26,8 +28,6 @@ def main():
         use_column_width=True,
     )
 
-
-@st.cache(allow_output_mutation=True)
 def predict(
     media_path: str,
     conf_thres: float,
