@@ -51,7 +51,7 @@ def load_data(endpoint=backend + "/data"):
     r = requests.get(endpoint, params={}, timeout=8000)
     return pd.DataFrame.from_dict(r.json()["data"])
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def get_movie_frame(
     file_path: str, frame_number: int, endpoint: str = backend + "/read"
 ):
@@ -185,7 +185,7 @@ def run_the_app():
         # Resize the image to the size YOLO model expects
         # selected_frame = cv2.resize(selected_frame, (416, 416))
         # Convert color space to match YOLO input
-        selected_frame = green_blue_swap(selected_frame)
+        #selected_frame = green_blue_swap(selected_frame)
         #selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGRA2RGB)
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split(".")[0]
@@ -214,8 +214,10 @@ def run_the_app():
             "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
-
-        st.image(
+        if st.sidebar.checkbox("Custom File Upload", value=True):
+            st.image(processed_image, use_column_width=True)
+        else:
+            st.image(
             cv2.cvtColor(np.float32(processed_image) / 255, cv2.COLOR_BGR2RGB), use_column_width=True
         )
         # os.remove(selected_frame)
