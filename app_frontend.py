@@ -113,6 +113,8 @@ def run_the_app():
     # Default is to load images
     if st.sidebar.checkbox("Custom File Upload", value=True):
 
+        custom = True
+
         st.warning(
             "Disclaimer: By uploading your files here, you also accept that any uploaded files will be processed on an external server located within the EU. \
             You also accept that these files may be stored and used for training purposes in future model iterations. At your request, any data provided will be removed from our servers \
@@ -168,6 +170,7 @@ def run_the_app():
             return
 
     else:
+        custom = False
         # Load classified data
         df = load_data()
         # Load all movies to speed up frame retrieval
@@ -214,7 +217,7 @@ def run_the_app():
             "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
-        if st.sidebar.checkbox("Custom File Upload", value=True):
+        if not custom:
             st.image(processed_image, use_column_width=True)
         else:
             st.image(
