@@ -140,6 +140,7 @@ def run_the_app():
                     # selected_frame = image  # cv2.resize(image, (416, 416))
                     selected_frame = image
                     selected_frame = np.float32(selected_frame)
+                    print("uploaded", selected_frame)
                     # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                     # Save in a temp file as YOLO expects filepath
                     selected_frame = save_image(f"{name}", selected_frame)
@@ -184,6 +185,8 @@ def run_the_app():
         selected_frame_index = frame_selector_ui(movie_frames)
         selected_frame_number = movie_frames.iloc[selected_frame_index]
         selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
+
+        print("from database", selected_frame)
 
         # Resize the image to the size YOLO model expects
         # selected_frame = cv2.resize(selected_frame, (416, 416))
