@@ -172,7 +172,6 @@ def run_the_app():
         # Resize the image to the size YOLO model expects
         # selected_frame = cv2.resize(selected_frame, (416, 416))
         # Convert color space to match YOLO input
-        selected_frame = np.float32(selected_frame) / 255
         selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split(".")[0]
