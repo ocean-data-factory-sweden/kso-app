@@ -90,6 +90,19 @@ def save_video(
     return r.json()["output"]
 
 
+def green_blue_swap(image):
+    # 3-channel image (no transparency)
+    if image.shape[2] == 3:
+        b,g,r = cv2.split(image)
+        image[:,:,0] = g
+        image[:,:,1] = b
+    # 4-channel image (with transparency)
+    elif image.shape[2] == 4:
+        b,g,r,a = cv2.split(image)
+        image[:,:,0] = g
+        image[:,:,1] = b
+    return image 
+
 def run_the_app():
     # Draw the UI element to select parameters for the YOLO object detector.
     confidence_threshold, overlap_threshold = object_detector_ui()
@@ -172,7 +185,8 @@ def run_the_app():
         # Resize the image to the size YOLO model expects
         # selected_frame = cv2.resize(selected_frame, (416, 416))
         # Convert color space to match YOLO input
-        selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGRA2RGB)
+        selected_frame = green_blue_swap(selected_frame)
+        #selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGRA2RGB)
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split(".")[0]
         selected_frame = save_image(
