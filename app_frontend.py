@@ -11,7 +11,7 @@ st.beta_set_page_config(page_title='Koster Object Detector App')
 st.set_option("deprecation.showfileUploaderEncoding", False)
 
 # interact with FastAPI endpoint
-backend = "http://2def374cc226.ngrok.io"
+backend = "http://fdc2b62d293d.ngrok.io"
 
 
 def main():
