@@ -171,27 +171,27 @@ def run_the_app():
 
     else:
         custom = False
-        st.error("This feature will allow you to explore our datasets. Please upload your own media until this becomes available. ")
+        #st.error("This feature will allow you to explore our datasets. Please upload your own media until this becomes available. ")
         # Load classified data
-        #df = load_data()
+        df = load_data()
         # Load all movies to speed up frame retrieval
-        #movie_list = [i for i in df["movie_path"].unique()]
+        movie_list = [i for i in df["movie_path"].unique()]
 
         # Select a movie
-        #selected_movie_path = movie_selector_ui(movie_list)
-        #movie_frames = get_selected_frames(df, selected_movie_path)
+        selected_movie_path = movie_selector_ui(movie_list)
+        movie_frames = get_selected_frames(df, selected_movie_path)
 
         # Select frame
-        #selected_frame_index = frame_selector_ui(movie_frames)
-        #selected_frame_number = movie_frames.iloc[selected_frame_index]
-        #selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
+        selected_frame_index = frame_selector_ui(movie_frames)
+        selected_frame_number = movie_frames.iloc[selected_frame_index]
+        selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
 
-        #selected_frame = np.float32(selected_frame)
+        selected_frame = np.float32(selected_frame)
         # Save in a temp file as YOLO expects filepath
-        #mbase = os.path.basename(selected_movie_path).split(".")[0]
-        #selected_frame = save_image(
-        #    f"{mbase}_{selected_frame_number}.png", selected_frame
-        #)
+        mbase = os.path.basename(selected_movie_path).split(".")[0]
+        selected_frame = save_image(
+            f"{mbase}_{selected_frame_number}.png", selected_frame
+        )
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
     processed_image, vid = predict(
