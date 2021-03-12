@@ -44,7 +44,7 @@ def predict(
         },
         timeout=8000,
     )
-    return np.array(r.json()["prediction"]), r.json()["vid"]
+    return np.array(r.json()["prediction"]), r.json()["vid"], r.json()["detect_dict"]
 
 @st.cache
 def load_data(endpoint=backend + "/data"):
@@ -101,7 +101,17 @@ def green_blue_swap(image):
         b,g,r,a = cv2.split(image)
         image[:,:,0] = g
         image[:,:,1] = b
-    return image 
+    return image
+
+def get_table_download_link(json):
+    """Generates a link allowing the data in a given panda dataframe to be downloaded
+    in:  dataframe
+    out: href string
+    """
+    df = pd.read_json(json)
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    href = f'<a href="data:file/csv;base64,{b64}"download="annotations.csv">Download annotations file</a>'
 
 def run_the_app():
     # Draw the UI element to select parameters for the YOLO object detector.
@@ -194,7 +204,7 @@ def run_the_app():
         )
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
-    processed_image, vid = predict(
+    processed_image, vid, detect_dict = predict(
         media_path=selected_frame,
         conf_thres=confidence_threshold,
         iou_thres=overlap_threshold,
@@ -206,6 +216,7 @@ def run_the_app():
             % (overlap_threshold, confidence_threshold)
         )
         st.video(bytes(list(processed_image)))
+        st.markdown(get_table_download_link(detect_dict), unsafe_allow_html=True)
         # os.remove(selected_frame)
     else:
         # Draw the header and image.
@@ -220,6 +231,7 @@ def run_the_app():
             st.image(
             cv2.cvtColor(np.float32(processed_image) / 255, cv2.COLOR_BGR2RGB), use_column_width=True
         )
+        st.markdown(get_table_download_link(detect_dict), unsafe_allow_html=True)
         # os.remove(selected_frame)
 
 
