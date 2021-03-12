@@ -44,7 +44,7 @@ def predict(
         },
         timeout=8000,
     )
-    return np.array(r.json()["prediction"]), r.json()["vid"], r.json()["detect_dict"]
+    return np.array(r.json()["prediction"]), r.json()["vid"], r.json()["prediction_dict"]
 
 @st.cache
 def load_data(endpoint=backend + "/data"):
