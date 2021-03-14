@@ -113,6 +113,7 @@ def get_table_download_link(json):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
     href = f'<a href="data:file/csv;base64,{b64}"download="annotations.csv">Download annotations file</a>'
+    return href
 
 def run_the_app():
     # Draw the UI element to select parameters for the YOLO object detector.
