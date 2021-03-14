@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import os, requests, cv2, json
 import pims
+import base64
 
 # Set app config
 st.beta_set_page_config(page_title='Koster Object Detector App')
