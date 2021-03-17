@@ -154,12 +154,13 @@ def green_blue_swap(image):
     return image
 
 
-def get_table_download_link(json):
+def get_table_download_link(json_dict):
     """Generates a link allowing the data in a given panda dataframe to be downloaded
     in:  dataframe
     out: href string
     """
-    df = pd.DataFrame.from_dict(json)
+    dlist = [[key,i[0],i[1],i[2],i[3]] for key,value in json_dict.items() for i in value]
+    df = pd.DataFrame.from_records(dlist, columns=["filename", "frame_no", "annotation", "class_id", "conf"])
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(
         csv.encode()
