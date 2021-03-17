@@ -7,7 +7,7 @@ import pims
 import base64
 
 # Set app config
-st.beta_set_page_config(page_title='Koster Object Detector App')
+st.beta_set_page_config(page_title="Koster Object Detector App")
 # Disable automatic encoding warning for uploaded files
 st.set_option("deprecation.showfileUploaderEncoding", False)
 
@@ -29,6 +29,7 @@ def main():
         use_column_width=True,
     )
 
+
 @st.cache(allow_output_mutation=True)
 def predict(
     media_path: str,
@@ -45,12 +46,18 @@ def predict(
         },
         timeout=8000,
     )
-    return np.array(r.json()["prediction"]), r.json()["vid"], r.json()["prediction_dict"]
+    return (
+        np.array(r.json()["prediction"]),
+        r.json()["vid"],
+        r.json()["prediction_dict"],
+    )
+
 
 @st.cache
 def load_data(endpoint=backend + "/data"):
     r = requests.get(endpoint, params={}, timeout=8000)
     return pd.DataFrame.from_dict(r.json()["data"])
+
 
 @st.cache(allow_output_mutation=True)
 def get_movie_frame(
@@ -63,6 +70,7 @@ def get_movie_frame(
     )
     return np.array(json.loads(r.json()["frame_data"]))
 
+
 @st.cache
 def save_image(file_name: str, file_data, endpoint: str = backend + "/save"):
     r = requests.post(
@@ -72,6 +80,7 @@ def save_image(file_name: str, file_data, endpoint: str = backend + "/save"):
         timeout=8000,
     )
     return r.json()["output"]
+
 
 @st.cache
 def save_video(
@@ -94,15 +103,16 @@ def save_video(
 def green_blue_swap(image):
     # 3-channel image (no transparency)
     if image.shape[2] == 3:
-        b,g,r = cv2.split(image)
-        image[:,:,0] = g
-        image[:,:,1] = b
+        b, g, r = cv2.split(image)
+        image[:, :, 0] = g
+        image[:, :, 1] = b
     # 4-channel image (with transparency)
     elif image.shape[2] == 4:
-        b,g,r,a = cv2.split(image)
-        image[:,:,0] = g
-        image[:,:,1] = b
+        b, g, r, a = cv2.split(image)
+        image[:, :, 0] = g
+        image[:, :, 1] = b
     return image
+
 
 def get_table_download_link(json):
     """Generates a link allowing the data in a given panda dataframe to be downloaded
@@ -111,9 +121,12 @@ def get_table_download_link(json):
     """
     df = pd.DataFrame.from_dict(json)
     csv = df.to_csv(index=False)
-    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    b64 = base64.b64encode(
+        csv.encode()
+    ).decode()  # some strings <-> bytes conversions necessary here
     href = f'<a href="data:file/csv;base64,{b64}" download="annotations.csv">Download annotations file</a>'
     return href
+
 
 def run_the_app():
     # Draw the UI element to select parameters for the YOLO object detector.
@@ -134,7 +147,7 @@ def run_the_app():
         )
 
         img_file_buffer = st.file_uploader(
-            "Upload an image/video (maximum size 200MB). Supported formats: png, jpg, jpeg, mov, mp4. Instructions: Use the sliders to adjust the model hyperparameters and wait to see the impact on the predicted bounding boxes.",
+            "Upload an image/video (maximum size 1GB). Supported formats: png, jpg, jpeg, mov, mp4. Instructions: Use the sliders to adjust the model hyperparameters and wait to see the impact on the predicted bounding boxes.",
             type=["png", "jpg", "jpeg", "mov", "mp4"],
         )
 
@@ -183,7 +196,7 @@ def run_the_app():
 
     else:
         custom = False
-        #st.error("This feature will allow you to explore our datasets. Please upload your own media until this becomes available. ")
+        # st.error("This feature will allow you to explore our datasets. Please upload your own media until this becomes available. ")
         # Load classified data
         df = load_data()
         # Load all movies to speed up frame retrieval
@@ -231,8 +244,9 @@ def run_the_app():
             st.image(processed_image, use_column_width=True)
         else:
             st.image(
-            cv2.cvtColor(np.float32(processed_image) / 255, cv2.COLOR_BGR2RGB), use_column_width=True
-        )
+                cv2.cvtColor(np.float32(processed_image) / 255, cv2.COLOR_BGR2RGB),
+                use_column_width=True,
+            )
         st.markdown(get_table_download_link(detect_dict), unsafe_allow_html=True)
         # os.remove(selected_frame)
 
