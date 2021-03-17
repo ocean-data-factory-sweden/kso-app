@@ -8,7 +8,7 @@ import base64
 
 # Set app config
 st.beta_set_page_config(
-        page_title="Koster Object Detector App", page_icon="assets/favicon-16x16.png"
+    page_title="Koster Object Detector App", page_icon="assets/favicon-16x16.png"
 )
 
 # Fix style issues
@@ -159,8 +159,12 @@ def get_table_download_link(json_dict):
     in:  dataframe
     out: href string
     """
-    dlist = [[key,i[0],i[1],i[2],i[3]] for key,value in json_dict.items() for i in value]
-    df = pd.DataFrame.from_records(dlist, columns=["filename", "frame_no", "annotation", "class_id", "conf"])
+    dlist = [
+        [key, i[0], i[1], i[2], i[3]] for key, value in json_dict.items() for i in value
+    ]
+    df = pd.DataFrame.from_records(
+        dlist, columns=["filename", "frame_no", "annotation", "class_id", "conf"]
+    )
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(
         csv.encode()
@@ -180,12 +184,12 @@ def run_the_app():
     if st.sidebar.checkbox("Custom File Upload", value=True):
 
         custom = True
-
-        st.warning(
-            "Disclaimer: By uploading your files here, you also accept that any uploaded files will be processed on an external server located within the EU. \
+        with st.beta_expander("Read Disclaimer"):
+            st.warning(
+                "Disclaimer: By uploading your files here, you also accept that any uploaded files will be processed on an external server located within the EU. \
             You also accept that these files may be stored and used for training purposes in future model iterations. At your request, any data provided will be removed from our servers \
             in accordance with prevailing GDPR regulations."
-        )
+            )
 
         img_file_buffer = st.file_uploader(
             "Upload an image/video (maximum size 1GB). Supported formats: png, jpg, jpeg, mov, mp4. Instructions: Use the sliders to adjust the model hyperparameters and wait to see the impact on the predicted bounding boxes.",
