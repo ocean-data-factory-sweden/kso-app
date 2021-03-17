@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import os, requests, cv2, json
 import pims
+import base64
 
 # Set app config
 st.beta_set_page_config(page_title='Koster Object Detector App')
@@ -44,7 +45,7 @@ def predict(
         },
         timeout=8000,
     )
-    return np.array(r.json()["prediction"]), r.json()["vid"]
+    return np.array(r.json()["prediction"]), r.json()["vid"], r.json()["prediction_dict"]
 
 @st.cache
 def load_data(endpoint=backend + "/data"):
@@ -101,7 +102,18 @@ def green_blue_swap(image):
         b,g,r,a = cv2.split(image)
         image[:,:,0] = g
         image[:,:,1] = b
-    return image 
+    return image
+
+def get_table_download_link(json):
+    """Generates a link allowing the data in a given panda dataframe to be downloaded
+    in:  dataframe
+    out: href string
+    """
+    df = pd.DataFrame.from_dict(json)
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    href = f'<a href="data:file/csv;base64,{b64}" download="annotations.csv">Download annotations file</a>'
+    return href
 
 def run_the_app():
     # Draw the UI element to select parameters for the YOLO object detector.
@@ -171,30 +183,30 @@ def run_the_app():
 
     else:
         custom = False
-        st.error("This feature will allow you to explore our datasets. Please upload your own media until this becomes available. ")
+        #st.error("This feature will allow you to explore our datasets. Please upload your own media until this becomes available. ")
         # Load classified data
-        #df = load_data()
+        df = load_data()
         # Load all movies to speed up frame retrieval
-        #movie_list = [i for i in df["movie_path"].unique()]
+        movie_list = [i for i in df["movie_path"].unique()]
 
         # Select a movie
-        #selected_movie_path = movie_selector_ui(movie_list)
-        #movie_frames = get_selected_frames(df, selected_movie_path)
+        selected_movie_path = movie_selector_ui(movie_list)
+        movie_frames = get_selected_frames(df, selected_movie_path)
 
         # Select frame
-        #selected_frame_index = frame_selector_ui(movie_frames)
-        #selected_frame_number = movie_frames.iloc[selected_frame_index]
-        #selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
+        selected_frame_index = frame_selector_ui(movie_frames)
+        selected_frame_number = movie_frames.iloc[selected_frame_index]
+        selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
 
-        #selected_frame = np.float32(selected_frame)
+        selected_frame = np.float32(selected_frame)
         # Save in a temp file as YOLO expects filepath
-        #mbase = os.path.basename(selected_movie_path).split(".")[0]
-        #selected_frame = save_image(
-        #    f"{mbase}_{selected_frame_number}.png", selected_frame
-        #)
+        mbase = os.path.basename(selected_movie_path).split(".")[0]
+        selected_frame = save_image(
+            f"{mbase}_{selected_frame_number}.png", selected_frame
+        )
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
-    processed_image, vid = predict(
+    processed_image, vid, detect_dict = predict(
         media_path=selected_frame,
         conf_thres=confidence_threshold,
         iou_thres=overlap_threshold,
@@ -206,6 +218,7 @@ def run_the_app():
             % (overlap_threshold, confidence_threshold)
         )
         st.video(bytes(list(processed_image)))
+        st.markdown(get_table_download_link(detect_dict), unsafe_allow_html=True)
         # os.remove(selected_frame)
     else:
         # Draw the header and image.
@@ -220,6 +233,7 @@ def run_the_app():
             st.image(
             cv2.cvtColor(np.float32(processed_image) / 255, cv2.COLOR_BGR2RGB), use_column_width=True
         )
+        st.markdown(get_table_download_link(detect_dict), unsafe_allow_html=True)
         # os.remove(selected_frame)
 
 
