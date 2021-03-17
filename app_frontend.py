@@ -20,13 +20,13 @@ def main():
     st.sidebar.title("Koster Lab - Deep Sea Coral Detection")
     st.sidebar.image(
         "https://panoptes-uploads.zooniverse.org/production/project_avatar/86c23ca7-bbaa-4e84-8d8a-876819551431.png",
-        use_column_width=True,
+        use_column_width=False,
     )
     # Run main app
     run_the_app()
     st.sidebar.image(
         "https://panoptes-uploads.zooniverse.org/production/project_attached_image/99429003-51ae-4667-b9b0-7ec2ff518723.png",
-        use_column_width=True,
+        use_column_width=False,
     )
 
 
