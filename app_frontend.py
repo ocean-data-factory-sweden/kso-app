@@ -17,7 +17,7 @@ backend = "http://fdc2b62d293d.ngrok.io"
 
 def main():
     # Set up appearance of sidebar
-    st.sidebar.subtitle("Koster Lab - Deep Sea Coral Detection")
+    st.sidebar.header("Koster Lab - Deep Sea Coral Detection")
     st.sidebar.image(
         "https://panoptes-uploads.zooniverse.org/production/project_avatar/86c23ca7-bbaa-4e84-8d8a-876819551431.png",
         use_column_width=True,
