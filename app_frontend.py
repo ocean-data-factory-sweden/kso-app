@@ -6,8 +6,46 @@ import os, requests, cv2, json
 import pims
 import base64
 
+hide_streamlit_style = """
+            <style>
+            footer {
+
+	visibility: hidden;
+
+	}
+footer:after {
+	content:'Powered by Combine';
+	visibility: visible;
+	display: block;
+	position: relative;
+	#background-color: red;
+	padding: 5px;
+	top: 2px;
+}
+            .sidebar .sidebar-content {
+    background-color: #f0f2f6;
+    background-image: linear-gradient(
+180deg
+,#f0f2f6,#fafafa);
+    background-attachment: fixed;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    height: 100vh;
+    overflow: auto;
+    padding: 0rem 1rem;
+    position: relative;
+    transition: margin-left .3s,box-shadow .3s;
+    width: 21rem;
+    z-index: 100;
+}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 # Set app config
-st.beta_set_page_config(page_title="Koster Object Detector App")
+st.beta_set_page_config(
+    page_title="Koster Object Detector App", favicon="assets/favicon-16x16.png"
+)
 # Disable automatic encoding warning for uploaded files
 st.set_option("deprecation.showfileUploaderEncoding", False)
 
