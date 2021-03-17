@@ -7,7 +7,7 @@ import pims
 import base64
 
 # Set app config
-st.set_page_config(
+st.beta_set_page_config(
         page_title="Koster Object Detector App", page_icon="assets/favicon-16x16.png"
 )
 
