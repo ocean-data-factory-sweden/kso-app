@@ -184,7 +184,7 @@ def run_the_app():
     if st.sidebar.checkbox("Custom File Upload", value=True):
 
         custom = True
-        with st.beta_expander("Read Disclaimer"):
+        with st.beta_expander("Click to read disclaimer"):
             st.warning(
                 "Disclaimer: By uploading your files here, you also accept that any uploaded files will be processed on an external server located within the EU. \
             You also accept that these files may be stored and used for training purposes in future model iterations. At your request, any data provided will be removed from our servers \
