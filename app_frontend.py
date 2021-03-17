@@ -6,6 +6,12 @@ import os, requests, cv2, json
 import pims
 import base64
 
+# Set app config
+st.set_page_config(
+        page_title="Koster Object Detector App", page_icon="assets/favicon-16x16.png"
+)
+
+# Fix style issues
 hide_streamlit_style = """
             <style>
             footer {
@@ -42,10 +48,6 @@ footer:after {
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# Set app config
-st.beta_set_page_config(
-    page_title="Koster Object Detector App", favicon="assets/favicon-16x16.png"
-)
 # Disable automatic encoding warning for uploaded files
 st.set_option("deprecation.showfileUploaderEncoding", False)
 
