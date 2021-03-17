@@ -331,7 +331,7 @@ def frame_selector_ui(movie_frames):
 
 # This sidebar UI lets the user select parameters for the YOLO object detector.
 def object_detector_ui():
-    st.sidebar.subheader("Model hyperparameters")
+    #st.sidebar.subheader("Model hyperparameters")
     confidence_threshold = st.sidebar.slider(
         "Confidence threshold", 0.0, 1.0, 0.5, 0.01
     )
