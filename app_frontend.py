@@ -198,7 +198,7 @@ def run_the_app():
         )
 
         if img_file_buffer is not None:
-            name = img_file_buffer.name.lower()
+            name = img_file_buffer.name
             im = os.path.splitext(name)[1].lower() in [".png", ".jpg", ".jpeg"]
             # text_io = io.TextIOWrapper(img_file_buffer)
             raw_buffer = img_file_buffer.read()
