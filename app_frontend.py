@@ -259,7 +259,7 @@ def run_the_app():
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split(".")[0]
         cv2.imwrite(f"{mbase}_{selected_frame_number}.png", selected_frame)
-        with open(f"{mbase}_{selected_frame_number}.png") as out_file:
+        with open(f"{mbase}_{selected_frame_number}.png", "rb") as out_file:
             image_data = out_file.read()
         selected_frame = save_image(
             f"{mbase}_{selected_frame_number}.png", image_data
