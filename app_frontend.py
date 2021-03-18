@@ -204,8 +204,7 @@ def run_the_app():
             raw_buffer = img_file_buffer.read()
 
             if im:
-                if not os.path.isfile(f"/data/api/{name}"):
-                    print("saving")
+                try:
                     #image = cv2.imdecode(np.fromstring(raw_buffer, np.uint8), -1)
                     # Resize the image to the size YOLO model expects
                     # selected_frame = image  # cv2.resize(image, (416, 416))
@@ -213,7 +212,7 @@ def run_the_app():
                     # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                     # Save in a temp file as YOLO expects filepath
                     selected_frame = save_image(f"{name}", raw_buffer)
-                else:
+                except:
                     selected_frame = f"/data/api/{name}"
 
             else:
