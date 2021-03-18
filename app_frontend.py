@@ -200,19 +200,17 @@ def run_the_app():
             name = img_file_buffer.name
             im = os.path.splitext(name)[1].lower() in [".png", ".jpg", ".jpeg"]
             # text_io = io.TextIOWrapper(img_file_buffer)
-            raw_buffer = img_file_buffer.read()
-            bytes_as_np_array = np.fromstring(raw_buffer, np.uint8)
 
             if im:
                 try:
-                    image = cv2.imdecode(bytes_as_np_array, -1)
+                    raw_buffer = img_file_buffer.read()
+                    image = cv2.imdecode(np.fromstring(raw_buffer, np.uint8), -1)
                     # Resize the image to the size YOLO model expects
                     # selected_frame = image  # cv2.resize(image, (416, 416))
-                    selected_frame = image
-                    selected_frame = np.float32(selected_frame)
+                    #selected_frame = np.float32(image)
                     # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                     # Save in a temp file as YOLO expects filepath
-                    selected_frame = save_image(f"{name}", selected_frame)
+                    selected_frame = save_image(f"{name}", np.float32(image))
                 except:
                     selected_frame = f"/data/api/{name}"
 
