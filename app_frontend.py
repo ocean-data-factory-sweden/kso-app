@@ -259,7 +259,7 @@ def run_the_app():
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split(".")[0]
         selected_frame = save_image(
-            f"{mbase}_{selected_frame_number}.png", selected_frame.astype('uint8').tobytes()
+            f"{mbase}_{selected_frame_number}.png", selected_frame
         )
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
