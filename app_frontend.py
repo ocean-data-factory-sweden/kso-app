@@ -5,6 +5,7 @@ import numpy as np
 import os, requests, cv2, json
 import pims
 import base64
+from PIL import Image
 
 # Set app config
 st.beta_set_page_config(
@@ -116,7 +117,7 @@ def save_image(file_name: str, file_data, endpoint: str = backend + "/save"):
     r = requests.post(
         endpoint,
         params={"file_name": file_name},
-        json={"file_data": json.dumps(file_data.tolist())},
+        files={"file_data": file_data},
         timeout=8000,
     )
     return r.json()["output"]
@@ -203,14 +204,14 @@ def run_the_app():
 
             if im:
                 try:
-                    raw_buffer = img_file_buffer.read()
-                    image = cv2.imdecode(np.fromstring(raw_buffer, np.uint8), -1)
+                    #raw_buffer = img_file_buffer.read()
+                    #image = cv2.imdecode(np.fromstring(raw_buffer, np.uint8), -1)
                     # Resize the image to the size YOLO model expects
                     # selected_frame = image  # cv2.resize(image, (416, 416))
                     #selected_frame = np.float32(image)
                     # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                     # Save in a temp file as YOLO expects filepath
-                    selected_frame = save_image(f"{name}", np.float32(image))
+                    selected_frame = save_image(f"{name}", raw_buffer)
                 except:
                     selected_frame = f"/data/api/{name}"
 
