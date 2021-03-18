@@ -205,6 +205,7 @@ def run_the_app():
 
             if im:
                 if not os.path.isfile(f"/data/api/{name}"):
+                    print("saving")
                     #image = cv2.imdecode(np.fromstring(raw_buffer, np.uint8), -1)
                     # Resize the image to the size YOLO model expects
                     # selected_frame = image  # cv2.resize(image, (416, 416))
