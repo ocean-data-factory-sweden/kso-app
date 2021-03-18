@@ -201,10 +201,10 @@ def run_the_app():
             name = img_file_buffer.name.lower()
             im = os.path.splitext(name)[1].lower() in [".png", ".jpg", ".jpeg"]
             # text_io = io.TextIOWrapper(img_file_buffer)
+            raw_buffer = img_file_buffer.read()
 
             if im:
                 try:
-                    raw_buffer = img_file_buffer.read()
                     #image = cv2.imdecode(np.fromstring(raw_buffer, np.uint8), -1)
                     # Resize the image to the size YOLO model expects
                     # selected_frame = image  # cv2.resize(image, (416, 416))
