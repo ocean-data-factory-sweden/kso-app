@@ -203,7 +203,7 @@ def run_the_app():
             # text_io = io.TextIOWrapper(img_file_buffer)
 
             if im:
-                try:
+                #try:
                     #raw_buffer = img_file_buffer.read()
                     #image = cv2.imdecode(np.fromstring(raw_buffer, np.uint8), -1)
                     # Resize the image to the size YOLO model expects
@@ -211,9 +211,9 @@ def run_the_app():
                     #selected_frame = np.float32(image)
                     # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                     # Save in a temp file as YOLO expects filepath
-                    selected_frame = save_image(f"{name}", raw_buffer)
-                except:
-                    selected_frame = f"/data/api/{name}"
+                selected_frame = save_image(f"{name}", raw_buffer)
+                #except:
+                #    selected_frame = f"/data/api/{name}"
 
             else:
                 video = True
