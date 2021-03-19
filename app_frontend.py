@@ -249,9 +249,10 @@ def run_the_app():
         # Select frame
         selected_frame_index = frame_selector_ui(movie_frames)
         selected_frame_number = movie_frames.iloc[selected_frame_index]
-        selected_movie_path = unswedify(selected_movie_path)
-        selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
-
+        try:
+            selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
+        except:
+            selected_frame = get_movie_frame(unswedify(selected_movie_path, selected_frame_number))
         selected_frame = np.float32(selected_frame)
         selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_RGB2BGR)
         #selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
