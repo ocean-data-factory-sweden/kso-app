@@ -258,13 +258,13 @@ def run_the_app():
         #selected_frame = np.float32(selected_frame)
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split(".")[0]
-        cv2.imwrite(f"{mbase}_{selected_frame_number}.png", selected_frame)
-        with open(f"{mbase}_{selected_frame_number}.png", "rb") as out_file:
+        cv2.imwrite(f"{mbase}_{selected_frame_number}.jpeg", selected_frame)
+        with open(f"{mbase}_{selected_frame_number}.jpeg", "rb") as out_file:
             image_data = out_file.read()
         selected_frame = save_image(
-            f"{mbase}_{selected_frame_number}.png", image_data
+            f"{mbase}_{selected_frame_number}.jpeg", image_data
         )
-        os.remove(f"{mbase}_{selected_frame_number}.png")
+        os.remove(f"{mbase}_{selected_frame_number}.jpeg")
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
     processed_image, vid, detect_dict = predict(
