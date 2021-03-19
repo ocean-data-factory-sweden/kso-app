@@ -255,7 +255,7 @@ def run_the_app():
         selected_frame_number = movie_frames.iloc[selected_frame_index]
         selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
 
-        selected_frame = green_blue_swap(selected_frame)
+        selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_RGB2BGR)
         #selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split(".")[0]
