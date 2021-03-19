@@ -244,12 +244,12 @@ def run_the_app():
 
         # Select a movie
         selected_movie_path = movie_selector_ui(movie_list)
-        selected_movie_path = unswedify(selected_movie_path)
         movie_frames = get_selected_frames(df, selected_movie_path)
 
         # Select frame
         selected_frame_index = frame_selector_ui(movie_frames)
         selected_frame_number = movie_frames.iloc[selected_frame_index]
+        selected_movie_path = unswedify(selected_movie_path)
         selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
 
         selected_frame = np.float32(selected_frame)
