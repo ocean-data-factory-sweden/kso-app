@@ -290,10 +290,9 @@ def run_the_app():
             "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
-        if not custom:
-            st.image(processed_image, use_column_width=True)
-        else:
-            st.image(
+        #if not custom:
+        #    st.image(processed_image, use_column_width=True)
+        st.image(
                 cv2.cvtColor(np.float32(processed_image) / 255, cv2.COLOR_BGR2RGB),
                 use_column_width=True,
             )
