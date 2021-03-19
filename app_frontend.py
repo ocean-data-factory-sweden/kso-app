@@ -255,7 +255,7 @@ def run_the_app():
         selected_frame_number = movie_frames.iloc[selected_frame_index]
         selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
 
-        selected_frame = np.float32(selected_frame)
+        #selected_frame = np.float32(selected_frame)
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split(".")[0]
         cv2.imwrite(f"{mbase}_{selected_frame_number}.png", selected_frame)
