@@ -142,14 +142,14 @@ def save_video(
 
 
 def unswedify(string):
-    """ Convert ä and ö to utf-8
-    """ 
+    """Convert ä and ö to utf-8"""
     return (
         string.encode("utf-8")
         .replace(b"\xc3\xa4", b"a\xcc\x88")
         .replace(b"\xc3\xb6", b"a\xcc\x88")
         .decode("utf-8")
     )
+
 
 def get_table_download_link(json_dict):
     """Generates a link allowing the data in a given panda dataframe to be downloaded
@@ -201,10 +201,10 @@ def run_the_app():
 
             if im:
                 try:
-                    #image = cv2.imdecode(np.fromstring(raw_buffer, np.uint8), -1)
+                    # image = cv2.imdecode(np.fromstring(raw_buffer, np.uint8), -1)
                     # Resize the image to the size YOLO model expects
                     # selected_frame = image  # cv2.resize(image, (416, 416))
-                    #selected_frame = np.float32(image)
+                    # selected_frame = np.float32(image)
                     # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
                     # Save in a temp file as YOLO expects filepath
                     selected_frame = save_image(f"{name}", raw_buffer)
@@ -252,18 +252,18 @@ def run_the_app():
         try:
             selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
         except:
-            selected_frame = get_movie_frame(unswedify(selected_movie_path, selected_frame_number))
+            selected_frame = get_movie_frame(
+                unswedify(selected_movie_path), selected_frame_number
+            )
         selected_frame = np.float32(selected_frame)
         selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_RGB2BGR)
-        #selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
+        # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split(".")[0]
         cv2.imwrite(f"{mbase}_{selected_frame_number}.jpeg", selected_frame)
         with open(f"{mbase}_{selected_frame_number}.jpeg", "rb") as out_file:
             image_data = out_file.read()
-        selected_frame = save_image(
-            f"{mbase}_{selected_frame_number}.jpeg", image_data
-        )
+        selected_frame = save_image(f"{mbase}_{selected_frame_number}.jpeg", image_data)
         os.remove(f"{mbase}_{selected_frame_number}.jpeg")
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
@@ -288,12 +288,12 @@ def run_the_app():
             "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
-        #if not custom:
+        # if not custom:
         #    st.image(processed_image, use_column_width=True)
         st.image(
-                cv2.cvtColor(np.float32(processed_image) / 255, cv2.COLOR_BGR2RGB),
-                use_column_width=True,
-            )
+            cv2.cvtColor(np.float32(processed_image) / 255, cv2.COLOR_BGR2RGB),
+            use_column_width=True,
+        )
         st.markdown(get_table_download_link(detect_dict), unsafe_allow_html=True)
         # os.remove(selected_frame)
 
@@ -333,7 +333,7 @@ def frame_selector_ui(movie_frames):
 
 # This sidebar UI lets the user select parameters for the YOLO object detector.
 def object_detector_ui():
-    #st.sidebar.subheader("Model hyperparameters")
+    # st.sidebar.subheader("Model hyperparameters")
     confidence_threshold = st.sidebar.slider(
         "Confidence threshold", 0.0, 1.0, 0.5, 0.01
     )
