@@ -107,9 +107,11 @@ def get_movie_frame(
     r = requests.get(
         endpoint,
         params={"file_path": file_path, "frame_number": frame_number},
-        timeout=5,
+        timeout=8000,
     )
-    return np.array(json.loads(r.json()["frame_data"]))
+    if r.ok:
+        return np.array(json.loads(r.json()["frame_data"]))
+    else return None
 
 
 @st.cache
@@ -249,9 +251,9 @@ def run_the_app():
         # Select frame
         selected_frame_index = frame_selector_ui(movie_frames)
         selected_frame_number = movie_frames.iloc[selected_frame_index]
-        try:
-            selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
-        except:
+
+        selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
+        if not selected_frame:
             selected_frame = get_movie_frame(
                 unswedify(selected_movie_path), selected_frame_number
             )
