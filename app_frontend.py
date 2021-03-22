@@ -107,7 +107,7 @@ def get_movie_frame(
     r = requests.get(
         endpoint,
         params={"file_path": file_path, "frame_number": frame_number},
-        timeout=10,
+        timeout=5,
     )
     return np.array(json.loads(r.json()["frame_data"]))
 
