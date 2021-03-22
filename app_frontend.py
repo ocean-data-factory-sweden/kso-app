@@ -111,7 +111,8 @@ def get_movie_frame(
     )
     if r.ok:
         return np.array(json.loads(r.json()["frame_data"]))
-    else return None
+    else:
+        return None
 
 
 @st.cache
