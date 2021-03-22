@@ -254,7 +254,7 @@ def run_the_app():
         selected_frame_number = movie_frames.iloc[selected_frame_index]
 
         selected_frame = get_movie_frame(selected_movie_path, selected_frame_number)
-        if not selected_frame:
+        if selected_frame is None:
             selected_frame = get_movie_frame(
                 unswedify(selected_movie_path), selected_frame_number
             )
