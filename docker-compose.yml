@@ -1,0 +1,75 @@
+version: '2.2'
+services:
+        #autoheal:
+        #restart: always
+        #image: willfarrell/autoheal
+        #environment:
+        #- AUTOHEAL_CONTAINER_LABEL=all
+        #- AUTOHEAL_START_PERIOD=300
+        #volumes:
+        #- /var/run/docker.sock:/var/run/docker.sock
+        #networks:
+        #- deploy_network
+  
+  reverse:
+    container_name: reverse
+    hostname: reverse
+    image: nginx
+    depends_on:
+     - streamlit
+    ports:
+     - 44300:44300
+    volumes:
+     - './proxy/nginx_config:/etc/nginx'
+     - './proxy/nginx_certs/private:/etc/ssl/private'
+    networks:
+     - deploy_network
+
+  fastapi:
+    build: fastapi/
+    init: true
+    ipc: host
+    platform: linux/amd64
+    runtime: nvidia
+    restart: always
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+    ports:
+      - 5000:5000
+    healthcheck:
+      test: curl -sS http://0.0.0.0:5000 || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 5m
+    volumes:
+      - './koster:/usr/src/app/koster'
+      - './model_config:/data'
+      - './uploads:/uploads'
+    networks:
+      - deploy_network
+    container_name: fastapi
+  streamlit:
+    build: streamlit/
+    platform: linux/amd64
+    restart: always
+    depends_on:
+      - fastapi
+    ports:
+      - 8501:8501
+    volumes:
+      - './model_config:/data'
+      - './uploads:/uploads'
+    networks:
+      - deploy_network
+    container_name: streamlit
+networks:
+  deploy_network:
+    driver: bridge
