@@ -1,5 +1,6 @@
 # pip install -U -r requirements.txt
 numpy
+opencv-python>=4.1.2
 #opencv-python >= 4.1
 #opencv-contrib-python
 #torch >= 1.4
@@ -16,6 +17,11 @@ streamlit
 protobuf
 python-multipart
 scikit-video
+paramiko
+scp
+panoptes_client
+python_magic==0.4.18
+
 
 # additional requirements for forward-compatibility
 wandb
@@ -28,6 +34,12 @@ tensorboard>=2.2
 seaborn>=0.11.0
 pandas
 
+# tutorial extras
+ipyfilechooser
+gdown
+qgrid
+boto3
+itables
 
 # Nvidia Apex (optional) for mixed precision training --------------------------
 # git clone https://github.com/NVIDIA/apex && cd apex && pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" . --user && cd .. && rm -rf apex

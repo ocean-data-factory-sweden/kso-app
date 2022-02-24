@@ -68,6 +68,7 @@ def main():
 
 @st.cache(allow_output_mutation=True)
 def predict(
+    weights_path: str,
     media_path: str,
     conf_thres: float,
     iou_thres: float,
@@ -76,6 +77,7 @@ def predict(
     r = requests.post(
         endpoint,
         params={
+            "weights_path": weights_path,
             "media_path": media_path,
             "conf_thres": conf_thres,
             "iou_thres": iou_thres,
@@ -109,6 +111,18 @@ def get_movie_frame(
     else:
         return None
 
+
+def get_models(endpoint: str = backend + "/models"
+):
+    r = requests.get(
+        endpoint,
+        params={},
+        timeout=8000,
+    )
+    if r.ok:
+        return tuple(json.loads(r.json()["models"]))
+    else:
+        return tuple()
 
 @st.cache
 def save_image(file_name: str, file_data, endpoint: str = backend + "/save"):
@@ -209,7 +223,20 @@ def run_the_app():
                 future iterations on our citizen science project page https://www.zooniverse.org/projects/victorav/the-koster-seafloor-observatory."
             )
     
-     
+    # Default is to use last public model version
+    if st.sidebar.checkbox("Custom model", value=False):
+        st.empty()
+        st.subheader("Choose a trained model")
+        
+        model_choice = st.selectbox(
+                 'Please select an available model',
+                 get_models())
+        if model_choice:
+            weights_path = f"/data/weights/{model_choice}"
+        else:
+            weights_path = "/data/weights/koster_full_resolution_1_2_5_25"
+    else:
+        weights_path = "/data/weights/koster_full_resolution_1_2_5_25"
 
     # Default is to load images
     if st.sidebar.checkbox("Custom File Upload", value=True):
@@ -229,29 +256,23 @@ def run_the_app():
 
             if im:
                 try:
-                    # image = cv2.imdecode(np.fromstring(raw_buffer, np.uint8), -1)
-                    # Resize the image to the size YOLO model expects
-                    # selected_frame = image  # cv2.resize(image, (416, 416))
-                    # selected_frame = np.float32(image)
-                    # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
-                    # Save in a temp file as YOLO expects filepath
                     selected_frame = save_image(f"{name}", raw_buffer)
                 except:
                     selected_frame = f"/data/api/{name}"
 
             else:
                 video = True
-                try:
-                    with open(
-                        f"temp_{name}", "wb"
-                    ) as out_file:  # open for [w]riting as [b]inary
-                        out_file.write(raw_buffer)
+                with open(
+                    f"temp_{name}", "wb"
+                ) as out_file:  # open for [w]riting as [b]inary
+                    out_file.write(raw_buffer)
 
-                    vid_cap = cv2.VideoCapture(f"temp_{name}")
-                    fps = int(vid_cap.get(cv2.CAP_PROP_FPS))
-                    w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                    h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                    assert fps > 0
+                vid_cap = cv2.VideoCapture(f"temp_{name}")
+                fps = int(vid_cap.get(cv2.CAP_PROP_FPS))
+                w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                assert fps > 0
+                try:
                     selected_frame = save_video(f"{name}", raw_buffer, fps, w, h)
                     os.remove(f"temp_{name}")
                 except:
@@ -285,7 +306,7 @@ def run_the_app():
             )
         selected_frame = np.float32(selected_frame)
         selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_RGB2BGR)
-        # selected_frame = cv2.cvtColor(selected_frame, cv2.COLOR_BGR2RGB)
+
         # Save in a temp file as YOLO expects filepath
         mbase = os.path.basename(selected_movie_path).split(".")[0]
         cv2.imwrite(f"{mbase}_{selected_frame_number}.jpeg", selected_frame)
@@ -296,6 +317,7 @@ def run_the_app():
 
     # Get the boxes for the objects detected by YOLO by running the YOLO model.
     processed_image, vid, detect_dict = predict(
+        weights_path=weights_path,
         media_path=selected_frame,
         conf_thres=confidence_threshold,
         iou_thres=overlap_threshold,
@@ -303,25 +325,24 @@ def run_the_app():
     if vid:
         st.header("Model Output")
         st.markdown(
-            "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
+            "**YOLO v4 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
         st.video("".join(processed_image))
-        #st.video(bytes(list(processed_image)))
         st.markdown(get_table_download_link(detect_dict), unsafe_allow_html=True)
         # os.remove(selected_frame)
     else:
         # Draw the header and image.
         st.subheader("Model Output")
         st.markdown(
-            "**YOLO v3 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
+            "**YOLO v4 Model** (overlap `%3.1f`) (confidence `%3.1f`)"
             % (overlap_threshold, confidence_threshold)
         )
         # if not custom:
         #    st.image(processed_image, use_column_width=True)
         st.image(
             cv2.cvtColor(np.float32(processed_image) / 255, cv2.COLOR_BGR2RGB),
-            use_column_width=True,
+            use_column_width=False,
         )
         st.markdown(get_table_download_link(detect_dict), unsafe_allow_html=True)
         # os.remove(selected_frame)
@@ -339,7 +360,7 @@ def movie_selector_ui(movie_list):
 
     # Choose a movie out of the selected movies.
     selected_movie_index = st.sidebar.slider(
-        "Choose a movie (index)", 0, len(movie_list) - 1, 0
+        "Choose a movie (index)", 0, len(movie_list) - 1, 0, 1
     )
 
     selected_movie_path = movie_list[selected_movie_index]
@@ -354,7 +375,7 @@ def frame_selector_ui(movie_frames):
 
     # Choose a frame out of the selected frames.
     selected_frame_index = st.sidebar.slider(
-        "Choose a frame (index)", 0, len(movie_frames) - 1, 0
+        "Choose a frame (index)", 0, len(movie_frames) - 1, 0, 1
     )
 
     return selected_frame_index
