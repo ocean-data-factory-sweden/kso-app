@@ -1,6 +1,5 @@
 # KSO App
-
-This is a Github repo for the Koster Streamlit Application.
+The Koster Seafloor Observatory is an open-source, citizen science and machine learning approach to analyse subsea movies.
 
 <!-- PROJECT SHIELDS -->
 <!--
@@ -16,11 +15,12 @@ This is a Github repo for the Koster Streamlit Application.
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
+![high-level][high-level-overview]
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+## Module Overview
+This Koster app module contains scripts and resources to expose trained machine learning models using Docker Compose. The frontend consists of a Streamlit application and the backend is powered by FastAPI.
 
-This is an internal project repository used to expose trained machine learning models using Docker Compose. The frontend consists of a Streamlit application and the backend is powered by FastAPI. 
+![Koster_app_module][Koster_app_module]
 
 
 <!-- LICENSE -->
@@ -52,4 +52,6 @@ Project Link: [https://github.com/ocean-data-factory-sweden/koster_app](https://
 [license-shield]: https://img.shields.io/github/license/ocean-data-factory-sweden/koster_app.svg?style=for-the-badge
 [license-url]: https://github.com/ocean-data-factory-sweden/koster_app/blob/main/LICENSE.txt
 
+[high-level-overview]: https://github.com/ocean-data-factory-sweden/koster_data_management/blob/main/images/high-level-overview.png?raw=true "Overview of the three main modules and the components of the Koster Seafloor Observatory"
 
+[Koster_app_module]: https://github.com/ocean-data-factory-sweden/koster_data_management/blob/main/images/Koster_app_module.png?raw=true
